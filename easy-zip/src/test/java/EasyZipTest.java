@@ -1,3 +1,4 @@
+import com.github.smsilva.easy.zip.EasyZipFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -17,18 +18,26 @@ public class EasyZipTest {
 
     @Test
     public void zipAFile() throws IOException {
-        Path file = createFile();
+        File file = createFile();
+        assertTrue(file.exists());
 
-        assertTrue(file.toFile().exists());
+        File zipFile = new File(tempDir.toFile().getAbsolutePath(), "new-file.zip");
+
+        EasyZipFile easyZipFile = new EasyZipFile(zipFile);
+        easyZipFile
+                .add(file)
+                .zip();
+
+        assertTrue(zipFile.exists());
     }
 
-    private Path createFile() throws IOException {
+    private File createFile() throws IOException {
         Path file = tempDir.resolve("numbers.txt");
 
         List<String> lines = Arrays.asList("1", "2", "3");
         Files.write(file, lines);
 
-        return file;
+        return file.toFile();
     }
 
 }
